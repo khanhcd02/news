@@ -1,0 +1,29 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<form id="editorForm" enctype="multipart/form-data" action="/admin/authorization/{{item.UserId}}" method="POST">
+    <div>
+        <h2>Phân quyền cho người dùng {{item.Name}} | ID: {{item.UserId}}</h2>
+    </div>
+    <table class="table table-bordered" id="tableSP">
+        <tr>
+            <th>Quản lý tin tức</th>
+            <th>Quản lý người dùng</th>
+            <th>Quản lý bookmarks</th>
+            <th>Quản lý danh mục</th>
+            <th>Quản lý bình luận</th>
+            <th>Quản lý phân quyền</th>
+        </tr>
+        <tr>
+            <td><input name="news" type="checkbox" data-toggle="toggle" {% if item.ManageNews == 1 %} checked {% endif %}></td>
+            <td><input name="users" type="checkbox" data-toggle="toggle" {% if item.ManageUsers == 1 %} checked {% endif %}></td>
+            <td><input name="bookmarks" type="checkbox" data-toggle="toggle" {% if item.ManageBookmarks == 1 %} checked {% endif %}></td>
+            <td><input name="categories" type="checkbox" data-toggle="toggle" {% if item.ManageCategories == 1 %} checked {% endif %}></td>
+            <td><input name="comments" type="checkbox" data-toggle="toggle" {% if item.ManageComments == 1 %} checked {% endif %}></td>
+            <td><input name="authorization" type="checkbox" data-toggle="toggle" {% if item.ManageAuthorization == 1 %} checked {% endif %}></td>
+        </tr>
+    </table>
+    <input type="submit" value="Cập nhật"></input>
+</form>
+{% endblock %}
+

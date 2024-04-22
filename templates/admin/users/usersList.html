@@ -1,0 +1,49 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+    <div>
+        <h2>Quản lý người dùng</h2>
+    </div>
+    <table class="table table-bordered" id="tableSP">
+        <tr>
+            <th>Họ tên</th>
+            <th style="width:200px">Hình ảnh</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Email</th>
+            <th>Ngày sinh</th>
+            <th>Số điện thoại</th>
+            <th>Địa chỉ</th>
+            <th>Trạng thái</th>
+            <th></th>
+        </tr>
+        <!-- Vòng lặp Python để hiển thị dữ liệu -->
+        {% for item in data %}
+        <tr>
+            <td>{{ item.Name }}</td>
+            <td>
+                <img src="{{ item.Image }}" style="height:80px;" />
+            </td>
+            <td>{{ item.Username }}</td>
+            <td>{{ item.Password }}</td>
+            <td>{{ item.Email }}</td>
+            <td>{{ item.BirthDay }}</td>
+            <td>{{ item.PhoneNumber }}</td>
+            <td>{{ item.Address }}</td>
+            <td>
+                {% if item.Status == 1 %}
+                    Đang hoạt động
+                {% else %}
+                    Khoá tài khoản
+                {% endif %}
+            </td>
+            <td>
+                <a style="height:40px;width:70px" class="btn btn-xs btn-info " href="/admin/users/{{ item.Id }}">
+                    SỬA
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+

@@ -1,0 +1,45 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+    <div>
+        <h2>Quản lý tin tức</h2>
+    </div>
+    <p>
+        <a class="btn btn-danger" href="/admin/news/create">Tin tức mới</a>
+    </p>
+    <table class="table table-bordered" id="tableSP">
+        <tr>
+            <th>Tiêu đề</th>
+            <th style="width:200px">Hình ảnh</th>
+            <th>Danh mục</th>
+            <th>Tác giả</th>
+            <th>Thời điểm đăng bài</th>
+            <th>Trạng thái</th>
+            <th></th>
+        </tr>
+        {% for item in data %}
+        <tr>
+            <td>{{ item.Title }}</td>
+            <td>
+                <img src="{{ item.Image }}" style="height:80px;" />
+            </td>
+            <td>{{ item.CategoryName }}</td>
+            <td>{{ item.Author }}</td>
+            <td>{{ item.PublishedAt }}</td>
+            <td>
+                {% if item.Status == 1 %}
+                    Đã đăng
+                {% else %}
+                    Đã ẩn
+                {% endif %}
+            </td>
+            <td>
+                <a style="height:40px;width:70px" class="btn btn-xs btn-info " href="/admin/news/{{ item.Id }}">
+                    SỬA
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+

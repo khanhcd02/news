@@ -1,0 +1,137 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        {% if results %}
+            <h2 id="result" style="width:150%">Kết quả tìm kiếm cho "{{keyword}}"</h2>
+            <label for="time">Thời gian:</label>
+            <select id="time" name="time">
+                <option value="all">Tất cả</option>
+                <option value="today">Hôm nay</option>
+                <option value="month">Tháng này</option>
+                <option value="year">Năm nay</option>
+            </select>
+            <label for="category">Danh mục:</label>
+            <select id="category" name="category">
+                <option value="all">Tất cả</option>
+                {% for category in categories %}
+                    {% if category.Status == 1 %}
+                        <option value="{{ category.Id }}">{{ category.CategoryName }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <div class="row" style='width:150%'>
+                <h3 id="result" style="width:150%"> Tác giả liên quan</h3>
+                {% for item in author %}
+                <div style="width:50%;height:50px;background-color:white;align-items: center;margin:5px 5px" class="col-lg-6">
+                    <a href="/author/{{item.Id}}">
+                        <div class="d-flex align-items-center">
+                            <img class="rounded-circle mr-2" src="{{item.Image}}" width="50" height="50" alt="">
+                            {{ item.Name }}
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>     
+            <div class="row" style='width:150%'>
+                <h3 id="result" style="width:150%"> Bài viết liên quan</h3>
+                {% for item in results %}
+                <div class="col-lg-6 news-item" data-time="{{ item.PublishedAt }}" data-category="{{ item.CategoryId }}">
+                    <div class="position-relative mb-3">
+                        <img class="img-fluid w-100" src="{{item.Image}}" style="object-fit: cover;height:200px">
+                        <div class="bg-white border border-top-0 p-4">
+                            <div class="mb-2">
+                                <a class="badge badge-primary text-uppercase font-weight-semi-bold p-2 mr-2"
+                                    href="/category/{{item.CategoryId}}">{{item.CategoryName}}</a>
+                                <a class="text-body" href="/{{item.Id}}"><small>{{ item.PublishedAt.strftime('%d/%m/%Y %H:%M:%S') }}</small></a>
+                            </div>
+                            <a class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold" href="/{{item.Id}}">{{ item.Title[:30] }}...</a>
+                        </div>
+                        <div class="d-flex justify-content-between bg-white border border-top-0 p-4">
+                            <div class="d-flex align-items-center">
+                                <img class="rounded-circle mr-2" src="{{item.userImg}}" width="25" height="25" alt="">
+                                <small>{{ item.Author }}</small>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <small class="ml-3"><i class="far fa-eye mr-2"></i>12345</small>
+                                <small class="ml-3"><i class="far fa-comment mr-2"></i>123</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h2 id="result" style="width:150%">Không tìm thấy bài viết nào với từ khoá "{{keyword}}"</h2>
+        {% endif %}
+        
+    </div>
+</div>
+<script>
+    window.onload = function() {
+        // Lấy đối tượng DOM của vị trí mong muốn
+        var targetElement = document.getElementById('result');
+        // Di chuyển đến vị trí đó bằng cách scroll
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var timeSelect = document.getElementById('time');
+        var categorySelect = document.getElementById('category');
+    
+        timeSelect.addEventListener('change', filterResults);
+        categorySelect.addEventListener('change', filterResults);
+    
+        function filterResults() {
+            var timeValue = timeSelect.value;
+            var categoryValue = categorySelect.value.toString();;
+    
+            var newsItems = document.querySelectorAll('.news-item');
+    
+            newsItems.forEach(function(newsItem) {
+                var publishedAt = new Date(newsItem.dataset.time); 
+                var category = newsItem.dataset.category.toString();;
+                var timeMatch = timeValue === 'all' || isWithinTimeRange(publishedAt, timeValue); 
+                var categoryMatch = categoryValue === 'all' || category === categoryValue; 
+                if (timeMatch && categoryMatch) {
+                    newsItem.style.display = 'block'; 
+                } else {
+                    newsItem.style.display = 'none';
+                }
+            });
+        }
+        function isWithinTimeRange(publishedAt, timeValue) {
+            var currentDate = new Date(); // Lấy thời gian hiện tại
+            switch (timeValue) {
+                case 'today':
+                    return isSameDay(publishedAt, currentDate);
+                case 'month':
+                    return isSameMonth(publishedAt, currentDate);
+                case 'year':
+                    return isSameYear(publishedAt, currentDate);
+                default:
+                    return false;
+            }
+        }
+        
+        // Hàm kiểm tra xem hai ngày có cùng một ngày không
+        function isSameDay(date1, date2) {
+            return date1.getFullYear() === date2.getFullYear() &&
+                   date1.getMonth() === date2.getMonth() &&
+                   date1.getDate() === date2.getDate();
+        }
+        
+        // Hàm kiểm tra xem hai ngày có cùng một tháng không
+        function isSameMonth(date1, date2) {
+            return date1.getFullYear() === date2.getFullYear() &&
+                   date1.getMonth() === date2.getMonth();
+        }
+
+        // Hàm kiểm tra xem hai ngày có cùng một tháng không
+        function isSameYear(date1, date2) {
+            return date1.getFullYear() === date2.getFullYear()
+        }
+    });
+</script>
+{% endblock %}

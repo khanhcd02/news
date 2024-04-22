@@ -1,0 +1,41 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<h1>Create News</h1>
+<form id="editorForm" enctype="multipart/form-data" action="/admin/news/create" method="POST">
+    <label for="title">Tiêu đề:</label><br>
+    <input style="width:100%" type="text" name="title" require>
+    <label for="editor">Nội dung:</label>
+    <div id="editor">
+        <textarea id="editorContent" name="content"></textarea>
+    </div>
+    <label for="title">Hình ảnh:</label><br>
+    <input type="file" name="img">
+    <label for="title">hoặc nhập Url hình ảnh:</label><br>
+    <input style="width:100%" type="text" name="image_url"><br><br>
+    <label for="category">Chọn danh mục:</label><br>
+    <label for="category">Choose a category:</label>
+        <select id="category" name="category">
+            {% for category in categories %}
+                {% if category.Status == 1 %}
+                    <option value="{{ category.Id }}">{{ category.CategoryName }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    <button type="submit">Submit</button>
+</form>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .then(editor => {
+            const editorContent = document.querySelector('#editorContent');
+            editor.model.document.on('change:data', () => {
+                editorContent.value = editor.getData();
+            });
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        
+</script>
+{% endblock %}

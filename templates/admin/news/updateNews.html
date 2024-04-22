@@ -1,0 +1,64 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<h1>Update News</h1>
+<form id="editorForm" enctype="multipart/form-data" action="/admin/news/{{news.Id}}" method="POST">
+    <label for="title">Tiêu đề:</label><br>
+    <input style="width:100%" type="text" name="title" value="{{news.Title}}" require><br>
+    <label for="editor">Nội dung:</label>
+    <div id="editor">
+        <input id="c" name="c" type="hidden">{{ news.Content | safe }}</input>
+        <textarea id="editorContent" name="content"></textarea>
+    </div><br>
+    <label for="title">Hình ảnh:</label><br>
+    <img src="{{news.Image}}"><br>
+    <input type="hidden" name="image" value="{{news.Image}}">
+    <input type="file" name="img"><br><br>
+    <label for="title">hoặc nhập Url hình ảnh:</label><br>
+    <input style="width:100%" type="text" name="image_url" value="{{news.Image}}"><br><br>
+    <label for="category">Chọn danh mục:</label><br>
+    <select id="category" name="category">
+        {% for category in categories %}
+            {% if category.Status == 1 %}
+                {% if category.Id == news.CategoryId %}
+                    <option value="{{ category.Id }}" selected>{{ category.CategoryName }}</option>
+                {% else %}
+                    <option value="{{ category.Id }}">{{ category.CategoryName }}</option>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </select><br>
+    <label for="status">Trạng thái:</label><br>
+    <select id="status" name="status">
+        {% if news.Status == 1 %}
+            <option value="1" selected>Đã đăng</option>
+            <option value="0">Xoá bài</option>
+        {% else %}
+            <option value="1">Đã đăng</option>
+            <option value="0" selected>Ẩn bài viết</option>
+        {% endif %}
+    </select>
+    <input name="old_content" type="hidden" value="{{ news.Content }}"></input>
+    <br><br>
+    <button type="submit">Cập nhật</button>
+</form>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .then(editor => {
+            const editorContent = document.querySelector('#editorContent');
+            editorContent.value = editor.getData();
+            editor.model.document.on('change:data', () => {
+                editorContent.value = editor.getData();
+            });
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        
+</script>
+<script>
+    var longtext = document.getElementById('c').value;
+    document.getElementById('editorContent').value = longtext;
+</script>
+{% endblock %}

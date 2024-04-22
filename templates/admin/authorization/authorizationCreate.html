@@ -1,0 +1,34 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<form action="/admin/authorization/create" method="POST">
+    <div>
+        <h2>Phân quyền cho người dùng</h2>
+        <select id="user" name="user_id">
+            {% for u in users %}
+                <option value="{{ u.Id }}">Name: {{ u.Name }} | ID: {{ u.Id }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <table class="table table-bordered" id="tableSP">
+        <tr>
+            <th>Quản lý tin tức</th>
+            <th>Quản lý người dùng</th>
+            <th>Quản lý bookmarks</th>
+            <th>Quản lý danh mục</th>
+            <th>Quản lý bình luận</th>
+            <th>Quản lý phân quyền</th>
+        </tr>
+        <tr>
+            <td><input name="news" type="checkbox" data-toggle="toggle" ></td>
+            <td><input name="users" type="checkbox" data-toggle="toggle" ></td>
+            <td><input name="bookmarks" type="checkbox" data-toggle="toggle" ></td>
+            <td><input name="categories" type="checkbox" data-toggle="toggle" ></td>
+            <td><input name="comments" type="checkbox" data-toggle="toggle" ></td>
+            <td><input name="authorization" type="checkbox" data-toggle="toggle" ></td>
+        </tr>
+    </table>
+    <input type="submit" value="Xác nhận"></input>
+</form>
+{% endblock %}
+

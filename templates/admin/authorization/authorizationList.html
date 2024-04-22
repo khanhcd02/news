@@ -1,0 +1,39 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+    <div>
+        <h2>Quản lý phân quyền</h2>
+    </div>
+    <p>
+        <a class="btn btn-danger" href="/admin/authorization/create">Phân quyền cho người mới</a>
+    </p>
+    <table class="table table-bordered" id="tableSP">
+        <tr>
+            <th>UserId</th>
+            <th>Người dùng</th>
+            <th>Quản lý tin tức</th>
+            <th>Quản lý người dùng</th>
+            <th>Quản lý bookmarks</th>
+            <th>Quản lý danh mục</th>
+            <th>Quản lý bình luận</th>
+            <th>Quản lý phân quyền</th>
+            <th></th>
+        </tr>
+        {% for item in data %}
+        <tr>
+            <td>{{ item.UserId }}</td>
+            <td>{{ item.Name }}</td>
+            <td>{% if item.ManageNews == 1 %} Có  {% else %} Không {% endif %} </td>
+            <td>{% if item.ManageUsers == 1 %} Có  {% else %} Không {% endif %}</td>
+            <td>{% if item.ManageBookmarks == 1 %} Có  {% else %} Không {% endif %}</td>
+            <td>{% if item.ManageCategories == 1 %} Có  {% else %} Không {% endif %}</td>
+            <td>{% if item.ManageComments == 1 %} Có  {% else %} Không {% endif %}</td>
+            <td>{% if item.ManageAuthorization == 1 %} Có  {% else %} Không {% endif %}</td>
+            <td>
+                <a style="height:40px;width:70px" class="btn btn-xs btn-info " href="/admin/authorization/{{ item.UserId }}">Update</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+

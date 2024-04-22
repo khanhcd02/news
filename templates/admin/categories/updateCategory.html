@@ -1,0 +1,31 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<h1>Update Category</h1>
+<form action="/admin/categories/{{category.Id}}" method="POST">
+    <label for="category_name">Tên danh mục:</label><br>
+    <input type="text" name="category_name" value="{{category.CategoryName}}" require><br>
+    <label for="category">Chọn danh mục cha:</label><br>
+    <select id="parent_id" name="parent_id">
+        <option value="">-- Chọn danh mục --</option>
+        {% for item in categories %}
+            {% if category.ParentId == item.Id %}
+                <option value="{{ item.Id }}" selected>{{ item.CategoryName }}</option>
+            {% elif item.ParentId == None and category.Id != item.Id %}
+                <option value="{{ item.Id }}">{{ item.CategoryName }}</option>
+            {% endif %}
+        {% endfor %}
+    </select><br>
+    <label for="status">Trạng thái:</label><br>
+    <select id="status" name="status">
+        {% if category.Status == 1 %}
+            <option value="1" selected>On</option>
+            <option value="0">Off</option>
+        {% else %}
+            <option value="1">On</option>
+            <option value="0" selected>Off</option>
+        {% endif %}
+    </select>
+    <button type="submit">Submit</button>
+</form>
+{% endblock %}

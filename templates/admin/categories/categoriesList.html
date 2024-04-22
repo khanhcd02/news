@@ -1,0 +1,39 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+    <div>
+        <h2>Quản lý danh mục</h2>
+    </div>
+    <p>
+        <a class="btn btn-danger" href="/admin/categories/create">Danh mục mới</a>
+    </p>
+    <table class="table table-bordered" id="tableSP">
+        <tr>
+            <th>Id</th>
+            <th>Tên danh mục</th>
+            <th>Danh mục cha</th>
+            <th>Trạng thái</th>
+            <th></th>
+        </tr>
+        {% for item in data %}
+        <tr>
+            <td>{{ item.Id }}</td>
+            <td>{{ item.CategoryName }}</td>
+            <td>{{ item.ParentName }}</td>
+            <td>
+                {% if item.Status == 1 %}
+                    On
+                {% else %}
+                    Off
+                {% endif %}
+            </td>
+            <td>
+                <a style="height:40px;width:70px" class="btn btn-xs btn-info " href="/admin/categories/{{ item.Id }}">
+                    SỬA
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
